@@ -1,49 +1,49 @@
 {
-  "IMyAgentPlugin": {
+  "IDidEthTypedData": {
     "components": {
       "schemas": {
-        "IMyAgentPluginFooArgs": {
+        "IVerifyEthTypedDataVcArgs": {
           "type": "object",
           "properties": {
-            "did": {
-              "type": "string",
-              "description": "Decentralized identifier"
-            },
-            "bar": {
-              "type": "string",
-              "description": "Lorem ipsum"
-            },
-            "foo": {
-              "type": "string",
-              "description": "Dolorem"
+            "raw": {
+              "type": "string"
             }
           },
           "required": [
-            "did",
-            "bar",
-            "foo"
+            "raw"
           ],
-          "description": "Arguments needed for  {@link  MyAgentPlugin.myPluginFoo } \nTo be able to export a plugin schema, your plugin methods should use an `args` parameter of a named type or interface."
+          "description": "The input to the  {@link  DidEthTypedData.verifyEthTypedDataVc }  method. Must be the raw string encoding of the VC"
         },
-        "IMyAgentPluginFooResult": {
+        "IVerifyEthTypedDataVcResult": {
           "type": "object",
           "properties": {
-            "foobar": {
+            "verified": {
+              "type": "boolean"
+            },
+            "from": {
               "type": "string"
             },
-            "baz": {}
+            "to": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            }
           },
-          "description": "Result of  {@link  MyAgentPlugin.myPluginFoo } \nTo be able to export a plugin schema, your plugin return types need to be Promises of a named type or interface."
+          "required": [
+            "verified"
+          ],
+          "description": "The boolean result of verifying an EthTypedData VC"
         }
       },
       "methods": {
-        "myPluginFoo": {
-          "description": "Your plugin method description",
+        "verifyEthTypedDataVc": {
+          "description": "This method accepts a raw TypedData vc and verifies the issuer matches the recovered address",
           "arguments": {
-            "$ref": "#/components/schemas/IMyAgentPluginFooArgs"
+            "$ref": "#/components/schemas/IVerifyEthTypedDataVcArgs"
           },
           "returnType": {
-            "$ref": "#/components/schemas/IMyAgentPluginFooResult"
+            "$ref": "#/components/schemas/IVerifyEthTypedDataVcResult"
           }
         }
       }
