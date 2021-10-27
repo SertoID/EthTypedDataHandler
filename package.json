@@ -1,12 +1,11 @@
 {
-  "name": "veramo-plugin",
+  "name": "did-eth-typed-data",
   "version": "1.0.0",
-  "source": "src/index.ts",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "veramo": {
     "pluginInterfaces": {
-      "IMyAgentPlugin": "./src/types/IMyAgentPlugin.ts"
+      "IMyAgentPlugin": "./src/types/IDidEthTypedData.ts"
     }
   },
   "scripts": {
@@ -36,7 +35,8 @@
   ],
   "dependencies": {
     "@veramo/core": "^3.0.0",
-    "@veramo/did-manager": "^3.0.0",
-    "@veramo/key-manager": "^3.0.0"
+    "@veramo/message-handler": "3.0.0",
+    "blakejs": "^1.1.1",
+    "eth-sig-util": "^3.0.1"
   }
 }

@@ -1,14 +1,14 @@
 import { TAgent, IMessageHandler } from '@veramo/core'
-import { IMyAgentPlugin } from '../../src/types/IMyAgentPlugin'
+import { IDidEthTypedDataHandler } from '../../src/types/IMyAgentPlugin'
 
-type ConfiguredAgent = TAgent<IMyAgentPlugin & IMessageHandler>
+type ConfiguredAgent = TAgent<IDidEthTypedDataHandler & IMessageHandler>
 
 export default (testContext: {
   getAgent: () => ConfiguredAgent
   setup: () => Promise<boolean>
   tearDown: () => Promise<boolean>
 }) => {
-  describe('my plugin', () => {
+  describe('EthTypedDataHandler', () => {
     let agent: ConfiguredAgent
 
     beforeAll(() => {

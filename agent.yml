@@ -67,7 +67,7 @@ constants:
     - getVerifiableCredentialsForSdr
     - validatePresentationAgainstSdr
     # template: add your plugin methods here too. This assumes that your plugin is added to the agent. See below, toward the end of this config file.
-    - myPluginFoo
+    - verifyEthTypedDataVc
 
 # Database
 dbConnection:
@@ -162,6 +162,7 @@ messageHandler:
         - $require: '@veramo/did-jwt#JwtMessageHandler'
         - $require: '@veramo/credential-w3c#W3cMessageHandler'
         - $require: '@veramo/selective-disclosure#SdrMessageHandler'
+        - $require: './build#EthTypedDataHandler'
 
 # DID resolvers
 didResolver:
@@ -219,9 +220,6 @@ keyManager:
                 - $require: '@veramo/kms-local#SecretBox'
                   $args:
                     - $ref: /constants/secretKey
-        # template: you can install your own Key Management System implementation too
-        my:
-          $require: ./build#MyKeyManagementSystem
 
 # DID Manager
 didManager:
@@ -233,11 +231,6 @@ didManager:
           - $ref: /dbConnection
       defaultProvider: did:ethr:rinkeby
       providers:
-        # template: you can install your customized DID provider like so
-        did:my:
-          $require: ./build#MyIdentifierProvider
-          $args:
-            - defaultKms: local
         did:ethr:
           $require: '@veramo/did-provider-ethr#EthrDIDProvider'
           $args:
@@ -279,4 +272,4 @@ agent:
           $args:
             - $ref: /dbConnection
           # template: install your plugin on the `@veramo/cli` agent
-        - $require: ./build#MyAgentPlugin
+        - $require: ./build#DidEthTypedData
