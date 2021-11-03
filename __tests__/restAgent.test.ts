@@ -12,7 +12,7 @@ import { Server } from 'http'
 import { AgentRouter, RequestWithAgentRouter } from '@veramo/remote-server'
 import { getConfig } from '@veramo/cli/build/setup'
 import { createObjects } from '@veramo/cli/build/lib/objectCreator'
-import { IMyAgentPlugin } from '../src/types/IMyAgentPlugin'
+import { IDidEthTypedData } from '../src/types/IDidEthTypedData'
 import fs from 'fs'
 
 jest.setTimeout(30000)
@@ -29,7 +29,7 @@ let restServer: Server
 let dbConnection: Promise<Connection>
 
 const getAgent = (options?: IAgentOptions) =>
-  createAgent<IMyAgentPlugin & IMessageHandler>({
+  createAgent<IDidEthTypedData & IMessageHandler>({
     ...options,
     plugins: [
       new AgentRestClient({
