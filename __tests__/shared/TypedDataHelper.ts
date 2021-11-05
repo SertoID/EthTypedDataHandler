@@ -1,5 +1,29 @@
 
-export const message = (did: string, ) =>{ 
+export const createDid = async(agent: any) => {
+  try {
+    const key = {
+      privateKeyHex: '8173fa697c8ccaaa755f99a9797d3eec734cb42d6b22f2635441bf785c929f69',
+      type: 'Secp256k1',
+      kms: 'local',
+      meta: {
+        algorithms: ['ES256K', 'ES256K-R', 'eth_signTransaction', 'eth_signTypedData', 'eth_signMessage'],
+      }
+    }
+  
+    const identifier = {
+      alias: 'test',
+      provider: 'did-ethr-rinkeby',
+      did: 'did:ethr:rinkeby:0x209A6C9182Aa15Fe832aD759de28d98776caAFc3',
+      keys: [key]
+    }
+    const importedDid = await agent.didManagerImport(identifier)
+    return importedDid;
+  } catch (e) {
+    console.log(`Error: ${e}`)
+  }
+}
+
+export const createMessage = (did: string, ) =>{ 
   return {
     "@context": [
       "https://www.w3.org/2018/credentials/v1",
@@ -80,7 +104,7 @@ export const types = {
   ],
   CredentialSubject: [
     {
-      name: "socialMediaProfileUrl",
+      name: "test",
       type: "string",
     },
     {
