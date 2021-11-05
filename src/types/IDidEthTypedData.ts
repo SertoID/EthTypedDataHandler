@@ -52,3 +52,71 @@ export interface IVerifyEthTypedDataVcResult {
  * @beta
  */
 export type IRequiredContext = IAgentContext<IResolver & IDIDManager>
+
+
+/**
+ * The expected object parsed from the raw VC
+ * 
+ * @beta
+ */
+export interface IEthTypedDataVc {
+  type: string[],
+  issuer: string,
+  issuanceDate: string,
+  credentialSubject: Record<string, any>
+  credentialSchema: any,
+  proof: Proof
+}
+
+/**
+ * Expected proof object from the raw vc
+ * 
+ * @beta
+ */
+export interface Proof {
+  verificationMethod: string,
+  created: string,
+  proofPurpose: string,
+  type: string,
+  proofValue: string,
+  eip712Domain: Eip712Domain
+}
+
+/**
+ * Interface for the EIP712Domain property
+ * 
+ * @beta
+ */
+export interface Eip712Domain {
+  domain: Domain,
+  messageSchema: MessageTypes,
+  primaryType: string
+}
+
+/**
+ * Domain of the TypedData
+ * @beta
+ */
+export interface Domain {
+  chainId: number,
+  name: string,
+  version: string
+}
+
+/**
+ * Types property describing the typed data
+ * @beta
+ */
+export interface MessageTypes {
+  EIP712Domain: TypedDataField[];
+  [additionalProperties: string]: TypedDataField[];
+}
+
+/**
+ * Type fields
+ * @beta
+ */
+export interface TypedDataField {
+  name: string;
+  type: string;
+};

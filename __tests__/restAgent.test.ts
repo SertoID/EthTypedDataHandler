@@ -12,7 +12,8 @@ import { Server } from 'http'
 import { AgentRouter, RequestWithAgentRouter } from '@veramo/remote-server'
 import { getConfig } from '@veramo/cli/build/setup'
 import { createObjects } from '@veramo/cli/build/lib/objectCreator'
-import { IMyAgentPlugin } from '../src/types/IMyAgentPlugin'
+import { IDidEthTypedData } from '../src/types/IDidEthTypedData'
+import { createDid } from "./shared/TypedDataHelper"
 import fs from 'fs'
 
 jest.setTimeout(30000)
@@ -29,7 +30,7 @@ let restServer: Server
 let dbConnection: Promise<Connection>
 
 const getAgent = (options?: IAgentOptions) =>
-  createAgent<IMyAgentPlugin & IMessageHandler>({
+  createAgent<IDidEthTypedData & IMessageHandler>({
     ...options,
     plugins: [
       new AgentRestClient({
@@ -45,6 +46,7 @@ const setup = async (options?: IAgentOptions): Promise<boolean> => {
   const config = getConfig('./agent.yml')
   config.constants.databaseFile = databaseFile
   const { agent, db } = createObjects(config, { agent: '/agent', db: '/dbConnection' })
+  await createDid(agent);
   serverAgent = agent
   dbConnection = db
 

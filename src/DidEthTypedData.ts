@@ -1,8 +1,7 @@
 import { IAgentPlugin } from '@veramo/core'
-import { IVerifyEthTypedDataVcArgs, IVerifyEthTypedDataVcResult, IDidEthTypedData, IRequiredContext } from './types/IDidEthTypedData'
+import { IVerifyEthTypedDataVcArgs, IVerifyEthTypedDataVcResult, IDidEthTypedData, IEthTypedDataVc } from './types/IDidEthTypedData'
 import { schema } from './index'
 import { recoverTypedSignature_v4, normalize } from "eth-sig-util";
-
 /**
  * {@inheritDoc IDidEthTypedData}
  * @beta
@@ -20,6 +19,12 @@ export class DidEthTypedData implements IAgentPlugin {
     let result: IVerifyEthTypedDataVcResult = { verified: false };
     try {
       const TypedData = JSON.parse(args.raw);
+      if(!TypedData.proof || !TypedData.proof.proofValue) throw new Error("Proof is undefined")
+      if(
+        !TypedData.proof.eip712Domain || 
+        !TypedData.proof.eip712Domain.messageSchema ||
+        !TypedData.proof.eip712Domain.domain 
+      ) throw new Error("eip712Domain is undefined")
       const { proof, ...signingInput } = TypedData;
       const { proofValue, eip712Domain, ...verifyInputProof} = proof;
       const verificationMessage = {
@@ -35,7 +40,9 @@ export class DidEthTypedData implements IAgentPlugin {
       }
   
       const recovered = recoverTypedSignature_v4({data: objectToVerify, sig: proofValue});
-      const issuerAddress = normalize(signingInput.issuer.split(":")[2]);
+      const didParts = signingInput.issuer.split(":")
+      const didAddress = didParts[didParts.length-1]
+      const issuerAddress = normalize(didAddress);
       if(recovered === issuerAddress){
         result.from = signingInput.issuer;
         result.to = signingInput.credentialSubject.id;
@@ -44,8 +51,8 @@ export class DidEthTypedData implements IAgentPlugin {
       } else {
         throw new Error("Recovered Address does not match issuer")
       }  
-    } catch (e) {
-      console.log(e)
+    } catch (e: any) {
+      throw new Error(e);
     }
 
     return result;
