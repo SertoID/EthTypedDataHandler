@@ -46,8 +46,7 @@ export default (testContext: {
 
     it('verifies valid vc', async () => {
       const result = await agent.verifyEthTypedDataVc({raw: signedVc})
-      expect(result.verified).toEqual(true)
-      expect(result.from).toEqual(issuerDid)
+      expect(result.issuer.id).toEqual(issuerDid)
     })
 
     it('throws if issuer is invalid', async () => {
@@ -70,7 +69,6 @@ export default (testContext: {
     it('throws if types is undefined', async () => {
       const vc = createVc(issuerDid)
       const vcJson = JSON.parse(vc)
-      console.log(vcJson)
       delete vcJson.proof.eip712Domain.messageSchema
       const newVc = JSON.stringify(vcJson)
       await expect(

@@ -30,19 +30,17 @@ export class EthTypedDataHandler extends AbstractMessageHandler {
           const vcObject = JSON.parse(raw);
           message.id = blake2bHex(raw);
           message.type = MessageTypes.typedData;
-          message.from = result.from;
-          message.to = result.to;
-          message.createdAt = result.createdAt;
+          message.from = result.issuer.id;
+          message.to = result.credentialSubject.id;
+          message.createdAt = result.issuanceDate;
+          message.credentials = [result]
           return message;
         }
       } else {
         throw new Error("Message is undefined");
       }
       
-    } catch (e) {
-      console.log("ERRROR")
-      console.log(e)
-    }
+    } catch (e) {}
     return super.handle(message, context)
   }
 }

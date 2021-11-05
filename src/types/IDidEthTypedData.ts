@@ -1,4 +1,4 @@
-import { IPluginMethodMap, IAgentContext, IDIDManager, IResolver } from '@veramo/core'
+import { IPluginMethodMap, IAgentContext, IDIDManager, IResolver, IMessage, VerifiableCredential, W3CCredential } from '@veramo/core'
 
 /**
  * Eth Typed Data plugin
@@ -35,12 +35,8 @@ export interface IVerifyEthTypedDataVcArgs {
  *
  * @beta
  */
-export interface IVerifyEthTypedDataVcResult {
-  verified: boolean,
-  from?: string,
-  to?: string,
-  createdAt?: string,
-
+export interface IVerifyEthTypedDataVcResult extends W3CCredential {
+  proof: Proof
 }
 
 /**
@@ -63,7 +59,9 @@ export interface IEthTypedDataVc {
   type: string[],
   issuer: string,
   issuanceDate: string,
-  credentialSubject: Record<string, any>
+  credentialSubject: Extensible<{
+    id?: string
+  }>
   credentialSchema: any,
   proof: Proof
 }
@@ -120,3 +118,5 @@ export interface TypedDataField {
   name: string;
   type: string;
 };
+
+type Extensible<T> = T & { [x: string]: any }

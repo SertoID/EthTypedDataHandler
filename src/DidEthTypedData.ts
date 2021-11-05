@@ -1,5 +1,5 @@
-import { IAgentPlugin } from '@veramo/core'
-import { IVerifyEthTypedDataVcArgs, IVerifyEthTypedDataVcResult, IDidEthTypedData, IEthTypedDataVc } from './types/IDidEthTypedData'
+import { IAgentPlugin, VerifiableCredential, W3CCredential } from '@veramo/core'
+import { IVerifyEthTypedDataVcArgs, IDidEthTypedData, IVerifyEthTypedDataVcResult } from './types/IDidEthTypedData'
 import { schema } from './index'
 import { recoverTypedSignature_v4, normalize } from "eth-sig-util";
 /**
@@ -16,7 +16,6 @@ export class DidEthTypedData implements IAgentPlugin {
 
   /** {@inheritdoc IDidEthTypedData.verifyEthTypedDataVc} */
   private async verifyEthTypedDataVc(args: IVerifyEthTypedDataVcArgs): Promise<IVerifyEthTypedDataVcResult> {
-    let result: IVerifyEthTypedDataVcResult = { verified: false };
     try {
       const TypedData = JSON.parse(args.raw);
       if(!TypedData.proof || !TypedData.proof.proofValue) throw new Error("Proof is undefined")
@@ -44,17 +43,13 @@ export class DidEthTypedData implements IAgentPlugin {
       const didAddress = didParts[didParts.length-1]
       const issuerAddress = normalize(didAddress);
       if(recovered === issuerAddress){
-        result.from = signingInput.issuer;
-        result.to = signingInput.credentialSubject.id;
-        result.createdAt = signingInput.issuanceDate;
-        result.verified = true;
+        TypedData.issuer = { id: signingInput.issuer }
+        return TypedData
       } else {
         throw new Error("Recovered Address does not match issuer")
       }  
     } catch (e: any) {
       throw new Error(e);
     }
-
-    return result;
   }
 }
