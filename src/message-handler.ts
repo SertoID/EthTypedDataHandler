@@ -27,7 +27,6 @@ export class EthTypedDataHandler extends AbstractMessageHandler {
       if(raw) {
         const result = await  context.agent.verifyEthTypedDataVc({ raw });
         if(result) {
-          const vcObject = JSON.parse(raw);
           message.id = blake2bHex(raw);
           message.type = MessageTypes.typedData;
           message.from = result.issuer.id;
