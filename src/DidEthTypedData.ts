@@ -17,7 +17,8 @@ export class DidEthTypedData implements IAgentPlugin {
   /** {@inheritdoc IDidEthTypedData.verifyEthTypedDataVc} */
   private async verifyEthTypedDataVc(args: IVerifyEthTypedDataVcArgs): Promise<IVerifyEthTypedDataVcResult> {
     try {
-      const TypedData = JSON.parse(args.raw);
+      const decoded = decodeURI(args.raw)
+      const TypedData = JSON.parse(decoded);
       if(!TypedData.proof || !TypedData.proof.proofValue) throw new Error("Proof is undefined")
       if(
         !TypedData.proof.eip712Domain || 
